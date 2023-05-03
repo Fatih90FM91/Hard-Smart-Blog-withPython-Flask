@@ -84,11 +84,11 @@ class BlogPost(db.Model, Base):
     comments = relationship("Comment", back_populates="parent_post")
 
     title = db.Column(db.String(250), unique=True, nullable=False)
-    subtitle = db.Column(db.String(250), nullable=False)
+    subtitle = db.Column(db.String(1000), nullable=False)
     date = db.Column(db.String(250), nullable=False)
     body = db.Column(db.Text, nullable=False)
     # author = db.Column(db.String(250), nullable=False)
-    img_url = db.Column(db.String(250), nullable=False)
+    img_url = db.Column(db.String(1000), nullable=False)
 
 
     def to_dict(self):
