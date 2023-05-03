@@ -22,6 +22,7 @@ Flask-Migrate==4.0.1
 Flask-Gravatar==0.5.0
 Flask-Login==0.5.0
 Bootstrap-Flask==2.2.0
+psycopg2-binary==2.9.6
 
 
 
