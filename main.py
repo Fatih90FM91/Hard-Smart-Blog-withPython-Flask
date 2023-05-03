@@ -279,7 +279,7 @@ def new_post():
 
 
 
-    return render_template("make-post.html", form=form, current_user=current_user)
+    return render_template("make-post.html", form=form, logged_in=True, current_user=current_user)
 
 
 @app.route("/delete-post/<int:id>")
