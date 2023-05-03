@@ -1,3 +1,4 @@
+{% import 'bootstrap/form.html' as wtf %}
 {% include "header.html" %}
 
 <!-- Page Header -->
@@ -10,7 +11,7 @@
 					<h1>{{post.title}}</h1>
 					<h2 class="subheading">{{post.subtitle}}</h2>
 					<span class="meta">Posted by
-              <a href="#">{{post.author}}</a>
+              <a href="#">{{author_name}}</a>
               on {{post.date}}</span>
           </div>
         </div>
@@ -27,10 +28,43 @@
             {{post.body|safe}}
           </p>
            <hr>
+
+               <!-- This is where the form will go -->
+        {{ wtf.render_form(form, button_map={'submit': 'primary'}, novalidate=True) }}
+        {{ ckeditor.load() }}
+        {{ ckeditor.config(name='body') }}
+
+            {%if admin_user %}
            <div class="clearfix">
           <a class="btn btn-primary float-right" href="{{url_for('edit_post', id=post.id)}}">Edit Post</a>
-        </div>
+            </div>
+            {%endif%}
+            <br>
+            {% if comments != None %}
+            {% for comment in comments %}
+            <br><br>
+            <div class="card">
+                {% if admin_user_name == comment.comment_author.name %}
+                <h5 class="card-header">{{comment.comment_author.name|title}} comment <span>Admin User..</span></h5>
+                {%else%}
+                <h5 class="card-header">{{comment.comment_author.name|title}} comment</h5>
+                {%endif%}
+
+                  <div class="card-body">
+                    <h5 class="card-title"><img src="{{ 'zzz.sochi@gmail.com'|gravatar }}">    {{comment.comment_author.name}}</h5>
+                    <p class="card-text">{{comment.body|safe}}</p>
+                      {% if current_user == comment.comment_author.name%}
+                    <a href="{{ url_for('delete_comment', id=comment.id ) }}" class="btn btn-primary">Go delete</a>
+                      {%endif%}
+                  </div>
+            </div>
+
+            {% endfor %}
+            {%endif%}
+
           </div>
+
+
       </div>
     </div>
   </article>
