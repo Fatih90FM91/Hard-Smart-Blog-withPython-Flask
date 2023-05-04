@@ -336,7 +336,7 @@ def register():
             db.session.commit()
 
             posts = db.session.query(BlogPost).all()
-            return render_template('index.html', all_posts=posts, logged_in=True, current_user=current_user)
+            return redirect('/login')
 
         else:
             flash('the email is already used before. Please try others!!')
