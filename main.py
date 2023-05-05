@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -24,6 +24,10 @@ from functools import wraps
 #WTF FORM IMPORT
 from forms import CreatePostForm, UserFormRegister, UserFormLogin, CommentForm
 
+#blueprint auth
+
+
+
 ####contact form imports########
 import smtplib, ssl
 from email.mime.text import MIMEText
@@ -32,8 +36,8 @@ from email.mime.multipart import MIMEMultipart
 admin_user = False
 admin_user_name = None
 current_user = None
-index_dlt=None
-
+index_dlt = None
+# print("i amd \"good\" ")
 convention = {
     "ix": 'ix_%(column_0_label)s',
     "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -130,8 +134,6 @@ class Comment(db.Model, Base):
 
 db.create_all()
 
-
-
 # @app.errorhandler(403)
 # def page_not_found():
 #     # note that we set the 404 status explicitly
@@ -150,6 +152,7 @@ def admin_only(func):
 
 
 @app.route('/')
+@login_required
 def get_all_posts():
     posts = db.session.query(BlogPost).all()
     # db.session.query(BlogPost).delete()
@@ -364,6 +367,8 @@ def login():
         if user:
             if check_password_hash(user.password, request.form['password']):
                 login_user(user)
+                session['user'] = user.id
+                print(session)
                 flash('Logged in successfully.')
                 posts = db.session.query(BlogPost).all()
                 users = User.query.all()
@@ -399,6 +404,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.pop('user', None)
     return redirect(url_for('login'))
 
 
